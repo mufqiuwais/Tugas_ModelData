@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<h1>Admin Mode</h1>
 	<form action="ActionController" method="post">
 		Enter id : <input type="text" name="id"> <BR>
 		Enter title : <input type="text" name="title"> <BR>

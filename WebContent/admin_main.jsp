@@ -8,11 +8,13 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<h1>Admin Mode</h1>
 	<div align="center">
 		<caption><h2>Article Database</h2></caption>
+		<caption><p>Welcome ${username}</p></caption>
 		<form action="ActionController" method="post">
-			<input type="submit" name="action" value="Search Article">
-			<input type="submit" name="action" value="Login Admin">
+			<input type="submit" name="action" value="Admin Search Article">
+			<input type="submit" name="action" value="Add Article">
         </form>
     </div>
 </body>

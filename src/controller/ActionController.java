@@ -34,8 +34,36 @@ public class ActionController extends HttpServlet {
 		String action = request.getParameter("action");
 		System.out.println("ACTION = "+action);
 		MongoDBUtils mongodbUtils = new MongoDBUtils();
-		if("Retrieve".equals(action)){
-			showAllData(request, response, mongodbUtils);
+		if("Search Article".equals(action)){
+			try {
+				ArrayList<Article> listArticle = mongodbUtils.getArticles();
+				request.setAttribute("dataList", listArticle);
+				request.getRequestDispatcher("/user_read.jsp").forward(request, response);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}if("Admin Search Article".equals(action)){
+			try {
+				ArrayList<Article> listArticle = mongodbUtils.getArticles();
+				request.setAttribute("dataList", listArticle);
+				request.getRequestDispatcher("/admin_read.jsp").forward(request, response);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}if("Login Admin".equals(action)){
+			RequestDispatcher rd = request.getRequestDispatcher("/admin_login.jsp");
+			rd.forward(request, response);
+		}if("Authentication".equals(action)){
+			String username = request.getParameter("username");
+			String password = request.getParameter("password");
+			boolean result = mongodbUtils.authenticate(username, password);
+			if(result) {
+				request.setAttribute("username", username);
+				request.getRequestDispatcher("/admin_main.jsp").forward(request, response);
+			}else {
+				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
+				rd.forward(request, response);
+			}
 		}else if("Insert".equals(action)){
 			// TODO
 			ArrayList<String> list = new ArrayList<>();
@@ -57,7 +85,7 @@ public class ActionController extends HttpServlet {
 			boolean result = mongodbUtils.insertData(id, title,
 					publication, author, date, url, content);
 			if(result) {
-				request.getRequestDispatcher("/main.jsp").forward(request, response);
+				request.getRequestDispatcher("/admin_main.jsp").forward(request, response);
 			}else {
 				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
 				rd.forward(request, response);
@@ -65,17 +93,6 @@ public class ActionController extends HttpServlet {
 		} else if("Add Article".equals(action)){
 			RequestDispatcher rd = request.getRequestDispatcher("/add_article.jsp");
 			rd.forward(request, response);
-		}
-	}
-	
-	public void showAllData(HttpServletRequest request, HttpServletResponse response,
-			MongoDBUtils mongodbUtils) {
-		try {
-			ArrayList<Article> listArticle = mongodbUtils.getArticles();
-			request.setAttribute("dataList", listArticle);
-			request.getRequestDispatcher("/main.jsp").forward(request, response);
-		}catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 }

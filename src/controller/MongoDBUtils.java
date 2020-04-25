@@ -24,11 +24,13 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
 
+import model.Admin;
 import model.Article;
 
 public class MongoDBUtils {	
 	MongoDatabase database;
 	MongoCollection<Article> collection;
+	MongoCollection<Admin> adminCollection;
 	
 	public MongoDBUtils() {
 		// Creating Credentials 
@@ -43,12 +45,30 @@ public class MongoDBUtils {
 		database = mongo.getDatabase("myDb"); 
 		database = database.withCodecRegistry(pojoCodecRegistry);
 		System.out.println("Credentials ::"+ credential);
-		collection = database.getCollection("articles", Article.class);
+		adminCollection = database.getCollection("admins", Admin.class);
+		if(adminCollection.count()==0) {
+			Admin admin = new Admin("admin","password");
+			adminCollection.insertOne(admin);
+		}
+	}
+	
+	public boolean authenticate(String username, String password) {
+		adminCollection = database.getCollection("admins", Admin.class);
+		ArrayList<Admin> adminList = new ArrayList<>();
+		FindIterable<Admin> adminIterable = adminCollection.find();
+		for (Admin admin : adminIterable) {
+			if(admin.getUsername().equals(username)&&
+				admin.getPassword().equals(password)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public ArrayList<Article> getArticles() throws IOException {
+		collection = database.getCollection("articles", Article.class);
 		ArrayList<Article> resultList = new ArrayList<>();
-		FindIterable<Article> articleIterable = collection.find();	
+		FindIterable<Article> articleIterable = collection.find();
 		for (Article article : articleIterable) {
 			System.out.println(article);
 			resultList.add(article);
@@ -58,6 +78,7 @@ public class MongoDBUtils {
 	
 	public boolean insertData(String id, String title, String publication,
 			String author, Date date, String url, String content) {
+		collection = database.getCollection("articles", Article.class);
 		try {	
 			Article article = new Article(id, title, publication, author,
 					date, url, content);
