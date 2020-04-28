@@ -3,6 +3,7 @@ package model;
 import java.util.Date;
 
 public class Article {
+	private String kode;
 	private String id;
 	private String title;
 	private String publication;
@@ -26,6 +27,12 @@ public class Article {
 		this.content = content;
 	}
 	
+	public final String getKode() {
+		return kode;
+	}
+	public final void setKode(String kode) {
+		this.kode = kode;
+	}
 	public String getId() {
 		return id;
 	}

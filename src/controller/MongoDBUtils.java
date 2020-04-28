@@ -22,15 +22,15 @@ import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 
-import model.Admin;
 import model.Article;
 
 public class MongoDBUtils {	
 	MongoDatabase database;
 	MongoCollection<Article> collection;
-	MongoCollection<Admin> adminCollection;
 	
 	public MongoDBUtils() {
 		// Creating Credentials 
@@ -45,30 +45,12 @@ public class MongoDBUtils {
 		database = mongo.getDatabase("myDb"); 
 		database = database.withCodecRegistry(pojoCodecRegistry);
 		System.out.println("Credentials ::"+ credential);
-		adminCollection = database.getCollection("admins", Admin.class);
-		if(adminCollection.count()==0) {
-			Admin admin = new Admin("admin","password");
-			adminCollection.insertOne(admin);
-		}
-	}
-	
-	public boolean authenticate(String username, String password) {
-		adminCollection = database.getCollection("admins", Admin.class);
-		ArrayList<Admin> adminList = new ArrayList<>();
-		FindIterable<Admin> adminIterable = adminCollection.find();
-		for (Admin admin : adminIterable) {
-			if(admin.getUsername().equals(username)&&
-				admin.getPassword().equals(password)) {
-				return true;
-			}
-		}
-		return false;
+		collection = database.getCollection("articles", Article.class);
 	}
 
 	public ArrayList<Article> getArticles() throws IOException {
-		collection = database.getCollection("articles", Article.class);
 		ArrayList<Article> resultList = new ArrayList<>();
-		FindIterable<Article> articleIterable = collection.find();
+		FindIterable<Article> articleIterable = collection.find();	
 		for (Article article : articleIterable) {
 			System.out.println(article);
 			resultList.add(article);
@@ -78,7 +60,6 @@ public class MongoDBUtils {
 	
 	public boolean insertData(String id, String title, String publication,
 			String author, Date date, String url, String content) {
-		collection = database.getCollection("articles", Article.class);
 		try {	
 			Article article = new Article(id, title, publication, author,
 					date, url, content);
@@ -91,8 +72,20 @@ public class MongoDBUtils {
 		return true;
 	}
 	
-	public boolean updateData(String row, String name, String city, String designation, int salary) {		
-		return true;
+	public boolean updateData(String row, String id, String title, String publication,
+			String author, Date date, String url, String content) {	
+		try{
+			collection.updateOne(Filters.eq("kode",row),Updates.set("id", id));
+			collection.updateOne(Filters.eq("kode",row),Updates.set("title", title));
+			collection.updateOne(Filters.eq("kode",row),Updates.set("publication", publication));
+			collection.updateOne(Filters.eq("kode",row),Updates.set("author", author));
+			collection.updateOne(Filters.eq("kode",row),Updates.set("date", date));
+			collection.updateOne(Filters.eq("kode",row),Updates.set("url", url));
+			collection.updateOne(Filters.eq("kode",row),Updates.set("content", content));
+			return true;
+		}catch (Exception e) {
+			return false;
+		}
 	}
 		
 	public boolean delete(String row) {

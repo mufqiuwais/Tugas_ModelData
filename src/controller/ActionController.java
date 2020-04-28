@@ -34,36 +34,8 @@ public class ActionController extends HttpServlet {
 		String action = request.getParameter("action");
 		System.out.println("ACTION = "+action);
 		MongoDBUtils mongodbUtils = new MongoDBUtils();
-		if("Search Article".equals(action)){
-			try {
-				ArrayList<Article> listArticle = mongodbUtils.getArticles();
-				request.setAttribute("dataList", listArticle);
-				request.getRequestDispatcher("/user_read.jsp").forward(request, response);
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
-		}if("Admin Search Article".equals(action)){
-			try {
-				ArrayList<Article> listArticle = mongodbUtils.getArticles();
-				request.setAttribute("dataList", listArticle);
-				request.getRequestDispatcher("/admin_read.jsp").forward(request, response);
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
-		}if("Login Admin".equals(action)){
-			RequestDispatcher rd = request.getRequestDispatcher("/admin_login.jsp");
-			rd.forward(request, response);
-		}if("Authentication".equals(action)){
-			String username = request.getParameter("username");
-			String password = request.getParameter("password");
-			boolean result = mongodbUtils.authenticate(username, password);
-			if(result) {
-				request.setAttribute("username", username);
-				request.getRequestDispatcher("/admin_main.jsp").forward(request, response);
-			}else {
-				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
-				rd.forward(request, response);
-			}
+		if("Retrieve".equals(action)){
+			showAllData(request, response, mongodbUtils);
 		}else if("Insert".equals(action)){
 			// TODO
 			ArrayList<String> list = new ArrayList<>();
@@ -85,14 +57,82 @@ public class ActionController extends HttpServlet {
 			boolean result = mongodbUtils.insertData(id, title,
 					publication, author, date, url, content);
 			if(result) {
-				request.getRequestDispatcher("/admin_main.jsp").forward(request, response);
+				showAllData(request, response, mongodbUtils);
 			}else {
 				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
 				rd.forward(request, response);
 			}			
-		} else if("Add Article".equals(action)){
+		} else if("delete".equals(action)){
+			String row = request.getParameter("row");
+			System.out.println("ROW DELETED = "+row);
+			
+			boolean result = mongodbUtils.delete(row);
+			if(result) {
+				showAllData(request, response, mongodbUtils);
+			} else {
+				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
+				rd.forward(request, response);
+			}
+		}else if("Add Article".equals(action)){
 			RequestDispatcher rd = request.getRequestDispatcher("/add_article.jsp");
 			rd.forward(request, response);
+		} else if("before_update".equals(action)) {
+			String row = request.getParameter("row");
+			String id = request.getParameter("id");
+			String title = request.getParameter("title");
+			String publication = request.getParameter("publication");
+			String author = request.getParameter("author");
+			String sdate = request.getParameter("date");
+			Date date = new Date();
+			try {
+				date = new SimpleDateFormat("MM/dd/yyyy").parse(sdate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			String url = request.getParameter("url");
+			String content = request.getParameter("content");
+			Article article = new Article(id, title, publication, author,
+					date, url, content);
+			article.setKode(row);
+			request.setAttribute("article", article);	
+			request.getRequestDispatcher("/Edit.jsp").forward(request, response);
+		}else if("update".equals(action)) {
+			String row = request.getParameter("row");
+			String id = request.getParameter("id");
+			String title = request.getParameter("title");
+			String publication = request.getParameter("publication");
+			String author = request.getParameter("author");
+			String sdate = request.getParameter("date");
+			Date date = new Date();
+			try {
+				date = new SimpleDateFormat("MM/dd/yyyy").parse(sdate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			String url = request.getParameter("url");
+			String content = request.getParameter("content");
+				
+			System.out.println("ROW UPDATED = "+row);
+			boolean resultUpdate = mongodbUtils.updateData(row, id, title, publication, author, date, url, content);
+			if(resultUpdate) {
+				showAllData(request, response, mongodbUtils);
+			}else {
+				RequestDispatcher rdUpdate = request.getRequestDispatcher("/error.jsp");
+				rdUpdate.forward(request, response);
+			}			
+		}
+	}
+	
+	public void showAllData(HttpServletRequest request, HttpServletResponse response,
+			MongoDBUtils mongodbUtils) {
+		try {
+			ArrayList<Article> listArticle = mongodbUtils.getArticles();
+			request.setAttribute("dataList", listArticle);
+			request.getRequestDispatcher("/main.jsp").forward(request, response);
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
