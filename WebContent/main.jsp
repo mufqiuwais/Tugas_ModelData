@@ -15,5 +15,26 @@
 			<input type="submit" name="action" value="Login Admin">
         </form>
     </div>
+    <div align="left">
+    	<caption><h2>Top Articles</h2></caption>
+    	<form action="ActionController" method="post">
+			<input type="submit" name="action" value="Top Articles">
+        </form>
+	    	<c:forEach items="${dataList}" var="dataItem">
+	    	<form action="ActionController" method="post">
+	    		<h2>${dataItem.getTitle()}</h2>
+	    		<p>${dataItem.getContent()}</p>
+		        <input type="submit" name="action" value="Details">
+	    		<input type="hidden" name="id" value="${dataItem.getId()}">
+		        <input type="hidden" name="title" value="${dataItem.getTitle()}">
+		        <input type="hidden" name="publication" value="${dataItem.getPublication()}">
+		        <input type="hidden" name="author" value="${dataItem.getAuthor()}">
+		        <input type="hidden" name="date" value="${dataItem.getDate()}">
+		        <input type="hidden" name="url" value="${dataItem.getUrl()}">
+		        <input type="hidden" name="content" value="${dataItem.getContent()}">
+		        <input type="hidden" name="visitors" value="${dataItem.getVisitors()}">
+		    </form>
+	    	</c:forEach>
+    </div>
 </body>
 </html>

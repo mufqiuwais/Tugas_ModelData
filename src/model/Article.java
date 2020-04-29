@@ -10,12 +10,14 @@ public class Article {
 	private Date date;
 	private String url;
 	private String content;
+	private long visitors;
 	
 	public Article() {
 		super();
 	}
 	
-	public Article(String id, String title, String publication, String author, Date date, String url, String content) {
+	public Article(String id, String title, String publication, String author,
+			Date date, String url, String content, long visitors) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -24,6 +26,7 @@ public class Article {
 		this.date = date;
 		this.url = url;
 		this.content = content;
+		this.visitors = visitors;
 	}
 	
 	public String getId() {
@@ -67,5 +70,11 @@ public class Article {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public long getVisitors() {
+		return visitors;
+	}
+	public void setVisitors(long visitors) {
+		this.visitors = visitors;
 	}
 }
