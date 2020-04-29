@@ -154,7 +154,7 @@ public class ActionController extends HttpServlet {
 			Article article = new Article(id, title, publication, author,
 					date, url, content, visitors);
 			request.setAttribute("article", article);	
-			request.getRequestDispatcher("/Edit.jsp").forward(request, response);
+			request.getRequestDispatcher("/update_article.jsp").forward(request, response);
 		}else if("update".equals(action)) {
 			String id = request.getParameter("id");
 			String title = request.getParameter("title");

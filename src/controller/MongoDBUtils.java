@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.json.*;
@@ -21,6 +22,7 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
@@ -61,32 +63,6 @@ public class MongoDBUtils {
 			Admin admin = new Admin("admin","password");
 			adminCollection.insertOne(admin);
 		}
-	}
-	
-	public boolean insertFromJson(String path) {
-JSONParser parser = new JSONParser();
-JSONArray a = (JSONArray) parser.parse(new FileReader("c:\\exer4-courses.json"));
-
-for (Object o : a)
-{
-JSONObject person = (JSONObject) o;
-String name = (String) person.get("name");
-System.out.println(name);
-
-String city = (String) person.get("city");
-System.out.println(city);
-
-String job = (String) person.get("job");
-System.out.println(job);
-
-JSONArray cars = (JSONArray) person.get("cars");
-
-for (Object c : cars)
-{
-System.out.println(c+"");
-}
-}
-		return false;
 	}
 	
 	public boolean authenticate(String username, String password) {
