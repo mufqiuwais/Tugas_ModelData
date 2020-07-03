@@ -37,7 +37,6 @@
 			            <td>${dataItem.getAuthor()}</td>
 			            <td>${dataItem.getDate()}</td>
 			            <td>${dataItem.getUrl()}</td>
-			            <td>${dataItem.getContent()}</td>
 			            <td><input type="submit" name="action" value="to_update"></td>
 			            <td><input type="submit" name="action" value="delete"></td>
 			        </tr>

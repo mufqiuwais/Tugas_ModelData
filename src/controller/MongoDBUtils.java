@@ -86,6 +86,16 @@ public class MongoDBUtils {
 		return resultList;
 	}
 	
+	public Article getOneArticleById(String id) throws IOException {
+		Article result = new Article();
+		FindIterable<Article> articleIterable = collection.find(eq("_id",id));
+		for (Article article : articleIterable) {
+			System.out.println(article);
+			result = article;
+		}		
+		return result;
+	}
+	
 	public ArrayList<Article> getTopArticles() throws IOException {
 		ArrayList<Article> resultList = new ArrayList<>();
 		FindIterable<Article> articleIterable = collection.find()

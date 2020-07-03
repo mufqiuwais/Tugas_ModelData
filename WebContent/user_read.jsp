@@ -22,7 +22,7 @@
                 <th>author</th>
                 <th>date</th>
                 <th>url</th>
-                <th>content</th>
+                <th>detail</th>
             </tr>
             <c:forEach items="${dataList}" var="dataItem">
             	<form action="ActionController" method="post">
@@ -33,7 +33,7 @@
 			            <td>${dataItem.getAuthor()}</td>
 			            <td>${dataItem.getDate()}</td>
 			            <td>${dataItem.getUrl()}</td>
-			            <td>${dataItem.getContent()}</td>
+			            <td><input type="submit" name="action" value="Details"></td>
 			        </tr>
 			        <input type="hidden" name="id" value="${dataItem.getId()}">
 			        <input type="hidden" name="title" value="${dataItem.getTitle()}">

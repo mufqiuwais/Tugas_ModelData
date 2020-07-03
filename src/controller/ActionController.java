@@ -38,38 +38,25 @@ public class ActionController extends HttpServlet {
 			try {
 				ArrayList<Article> listArticle = mongodbUtils.getTopArticles();
 				request.setAttribute("dataList", listArticle);
+//				request.setAttribute("content", "as");
 				request.getRequestDispatcher("/main.jsp").forward(request, response);
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
 		}if("Details".equals(action)){
 			String id = request.getParameter("id");
-			String title = request.getParameter("title");
-			String publication = request.getParameter("publication");
-			String author = request.getParameter("author");
-			String sdate = request.getParameter("date");
-			Date date = new Date();
-			try {
-				date = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(sdate);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			String url = request.getParameter("url");
-			String content = request.getParameter("content");
-			
-			long visitors = Integer.parseInt(request.getParameter("visitors"));
-			Article article = new Article(id, title, publication, author,
-					date, url, content, visitors+1);
+			Article article = mongodbUtils.getOneArticleById(id);
 			request.setAttribute("article", article);
-			boolean resultUpdate = mongodbUtils.updateData(id, title, publication, author, date, url, content, visitors+1);
-			if(resultUpdate) {
+			boolean resultUpdate = mongodbUtils.updateData(id, article.getTitle(), 
+					article.getPublication(), article.getAuthor(), article.getDate(),
+					article.getUrl(), article.getContent(), article.getVisitors()+1);
+			if(true) {
 				request.getRequestDispatcher("/user_detail.jsp").forward(request, response);
 			}else {
 				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
 				rd.forward(request, response);
 			}	
-		}if("Search Article".equals(action)){
+		}if("List of All Articles".equals(action)){
 			try {
 				ArrayList<Article> listArticle = mongodbUtils.getArticles();
 				request.setAttribute("dataList", listArticle);
