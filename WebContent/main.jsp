@@ -13,6 +13,7 @@
 		<form action="ActionController" method="post">
 			<input type="submit" name="action" value="List of All Articles">
 			<input type="submit" name="action" value="Login Admin">
+			
         </form>
     </div>
     <div align="left">

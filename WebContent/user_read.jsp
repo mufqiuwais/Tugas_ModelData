@@ -22,7 +22,7 @@
                 <th>author</th>
                 <th>date</th>
                 <th>url</th>
-                <th>detail</th>
+                <th>details</th>
             </tr>
             <c:forEach items="${dataList}" var="dataItem">
             	<form action="ActionController" method="post">

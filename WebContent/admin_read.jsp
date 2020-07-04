@@ -13,7 +13,9 @@
 		<caption><h2>Article Database</h2></caption>
 		<form action="ActionController" method="post">
 			<input type="submit" name="action" value="Admin Search Article">
-			<input type="submit" name="action" value="Add Article">
+			<input type="submit" name="action" value="Add Article"><BR>
+			<input type="text" name="keySearch">
+			<input type="submit" name="action" value="Search">
         </form>
        	<table border="1" cellpadding="5">
             <caption><h2>List of Articles</h2></caption>
@@ -24,7 +26,7 @@
                 <th>author</th>
                 <th>date</th>
                 <th>url</th>
-                <th>content</th>
+                <th>details</th>
                 <th>delete</th>
                 <th>update</th>
             </tr>
@@ -37,6 +39,7 @@
 			            <td>${dataItem.getAuthor()}</td>
 			            <td>${dataItem.getDate()}</td>
 			            <td>${dataItem.getUrl()}</td>
+			            <td><input type="submit" name="action" value="Details"></td>
 			            <td><input type="submit" name="action" value="to_update"></td>
 			            <td><input type="submit" name="action" value="delete"></td>
 			        </tr>

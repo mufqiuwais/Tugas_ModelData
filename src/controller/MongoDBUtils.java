@@ -96,6 +96,16 @@ public class MongoDBUtils {
 		return result;
 	}
 	
+	public ArrayList<Article> getArticlesByKeySearch(String keySearch) throws IOException {
+		ArrayList<Article> resultList = new ArrayList<>();
+		FindIterable<Article> articleIterable = collection.find(eq("$text",eq("$search",keySearch)));
+		for (Article article : articleIterable) {
+			System.out.println(article);
+			resultList.add(article);
+		}		
+		return resultList;
+	}
+	
 	public ArrayList<Article> getTopArticles() throws IOException {
 		ArrayList<Article> resultList = new ArrayList<>();
 		FindIterable<Article> articleIterable = collection.find()

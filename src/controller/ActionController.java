@@ -72,6 +72,15 @@ public class ActionController extends HttpServlet {
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
+		}if("Search".equals(action)){
+			try {
+				String keySearch = request.getParameter("keySearch");
+				ArrayList<Article> listArticle = mongodbUtils.getArticlesByKeySearch(keySearch);
+				request.setAttribute("dataList", listArticle);
+				request.getRequestDispatcher("/admin_read.jsp").forward(request, response);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
 		}if("Login Admin".equals(action)){
 			RequestDispatcher rd = request.getRequestDispatcher("/admin_login.jsp");
 			rd.forward(request, response);
