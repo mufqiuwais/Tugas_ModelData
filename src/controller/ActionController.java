@@ -51,7 +51,6 @@ public class ActionController extends HttpServlet {
 				latestArticle = mongodbUtils.getLatestArticles();
 				request.setAttribute("topArticles", listArticle);
 				request.setAttribute("latestArticles", latestArticle);
-//				request.setAttribute("content", "as");
 				request.getRequestDispatcher("/user_home.jsp").forward(request, response);
 			}catch (Exception e) {
 				e.printStackTrace();
@@ -276,6 +275,10 @@ public class ActionController extends HttpServlet {
 			
 			boolean result = mongodbUtils.delete(id);
 			if(result) {
+				String username = request.getParameter("username");
+				String password = request.getParameter("password");
+				request.setAttribute("username", username);
+				request.setAttribute("password", password);
 				request.getRequestDispatcher("/admin_read.jsp").forward(request, response);
 			} else {
 				request.getRequestDispatcher("/error.jsp").forward(request, response);
@@ -289,6 +292,10 @@ public class ActionController extends HttpServlet {
 			article.setUrl(request.getParameter("url"));
 			article.setContent(request.getParameter("content"));
 			request.setAttribute("article", article);	
+			String username = request.getParameter("username");
+			String password = request.getParameter("password");
+			request.setAttribute("username", username);
+			request.setAttribute("password", password);
 			request.getRequestDispatcher("/update_article.jsp").forward(request, response);
 		}else if("update".equals(action)) {
 			String id = request.getParameter("id");
@@ -309,6 +316,10 @@ public class ActionController extends HttpServlet {
 			System.out.println("ROW UPDATED = "+id);
 			boolean resultUpdate = mongodbUtils.updateData(id, title, publication, author, date, url, content, visitors);
 			if(resultUpdate) {
+				String username = request.getParameter("username");
+				String password = request.getParameter("password");
+				request.setAttribute("username", username);
+				request.setAttribute("password", password);
 				request.getRequestDispatcher("/admin_read.jsp").forward(request, response);
 			}else {
 				request.getRequestDispatcher("/error.jsp").forward(request, response);

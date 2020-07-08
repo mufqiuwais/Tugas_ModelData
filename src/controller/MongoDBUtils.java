@@ -95,13 +95,8 @@ public class MongoDBUtils {
 		
 		ArrayList<Article> resultList = new ArrayList<>();
 		int first = 20*(page-1);
-//		long last = first+20-1;
-//		if(last>getTotalCountArticles()) {
-//			last = getTotalCountArticles();
-//		}
 		FindIterable<Article> articleIterable = collection.find().skip(first).limit(20);
 		for (Article article : articleIterable) {
-//			System.out.println(article);
 			resultList.add(article);
 		}	
 		return resultList;
@@ -118,12 +113,10 @@ public class MongoDBUtils {
 	}
 	
 	public long getTotalArticlesByKeySearch(String keySearch) throws IOException {
-//		int first = 20*(page-1);
 		long count=0;
 		FindIterable<Article> articleIterable = collection
 				.find(eq("$text",eq("$search",keySearch)));
 		for (Article article : articleIterable) {
-//			System.out.println(article);
 			count++;
 		}		
 		return count;
@@ -135,7 +128,6 @@ public class MongoDBUtils {
 		FindIterable<Article> articleIterable = collection
 				.find(eq("$text",eq("$search",keySearch))).skip(first).limit(20);
 		for (Article article : articleIterable) {
-//			System.out.println(article);
 			resultList.add(article);
 		}		
 		return resultList;
@@ -213,7 +205,6 @@ public class MongoDBUtils {
 	}
 		
 	public boolean delete(String id) {
-//		DeleteResult del = collection.deleteOne(eq("_id", row));
 		DeleteResult del = collection.deleteOne(eq("_id", id));
 		System.out.println("del = "+del.getDeletedCount());
 		return true;

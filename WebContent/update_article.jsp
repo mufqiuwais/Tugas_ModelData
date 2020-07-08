@@ -18,6 +18,8 @@
 		<input type="hidden" name="id" value="${article.getId()}">
 		<input type="hidden" name="date" value="${article.getDate()}">
 		<input type="hidden" name="visitors" value="${article.getVisitors()}">
+		<input type="hidden" name="username" value="${username}">
+		<input type="hidden" name="password" value="${password}">
 		<input type="hidden" name="action" value="update">
 		<input type="submit" />
 	</form>

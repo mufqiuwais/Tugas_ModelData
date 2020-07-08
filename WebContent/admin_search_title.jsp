@@ -29,8 +29,8 @@
                 <th>date</th>
                 <th>url</th>
                 <th>details</th>
-                <th>delete</th>
                 <th>update</th>
+                <th>delete</th>
             </tr>
             <c:forEach items="${dataList}" var="dataItem">
             	<form action="ActionController" method="post">
