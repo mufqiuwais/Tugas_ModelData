@@ -11,6 +11,9 @@
 	<div align="center">
 		<caption><h2>Article Database</h2></caption>
 		<form action="ActionController" method="post">
+			<input type="submit" name="action" value="User Home">
+        </form>
+		<form action="ActionController" method="post">
 			<input type="text" name="keySearch">
 			<input type="hidden" name="action" value="User Search">
 			<input type="submit" value="Search">
@@ -43,13 +46,15 @@
 			        <input type="hidden" name="author" value="${dataItem.getAuthor()}">
 			        <input type="hidden" name="date" value="${dataItem.getDate()}">
 			        <input type="hidden" name="url" value="${dataItem.getUrl()}">
+			        <input type="hidden" name="visitors" value="${dataItem.getVisitors()}">
 			        <input type="hidden" name="content" value="${dataItem.getContent()}">
 			     </form>
 		    </c:forEach>
 		</table>
 		<form action="ActionController" method="post">
 			<p>Page : ${page}</p>
-			<p>Count : ${count}</p>
+			<p>Count in page : ${count}</p>
+			<p>Total : ${totalCount}</p>
 			<c:choose>
 			    <c:when test="${page==1&&totalCount<=20}">
 					<input type="hidden" name="page" value="${page}">

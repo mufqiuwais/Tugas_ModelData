@@ -41,11 +41,20 @@
 			            <td>${dataItem.getAuthor()}</td>
 			            <td>${dataItem.getDate()}</td>
 			            <td>${dataItem.getUrl()}</td>
-			            <td><input type="submit" name="action" value="Details"></td>
+			            <td><input type="submit" name="action" value="Admin Details"></td>
 			            <td><input type="submit" name="action" value="to_update"></td>
 			            <td><input type="submit" name="action" value="delete"></td>
 			        </tr>
 			        <input type="hidden" name="id" value="${dataItem.getId()}">
+			        <input type="hidden" name="title" value="${dataItem.getTitle()}">
+			        <input type="hidden" name="publication" value="${dataItem.getPublication()}">
+			        <input type="hidden" name="author" value="${dataItem.getAuthor()}">
+			        <input type="hidden" name="date" value="${dataItem.getDate()}">
+			        <input type="hidden" name="url" value="${dataItem.getUrl()}">
+			        <input type="hidden" name="visitors" value="${dataItem.getVisitors()}">
+			        <input type="hidden" name="content" value="${dataItem.getContent()}">
+					<input type="hidden" name="username" value="${username}">
+					<input type="hidden" name="password" value="${password}">
 			     </form>
 		    </c:forEach>
 		</table>
@@ -53,7 +62,8 @@
 			<input type="hidden" name="username" value="${username}">
 			<input type="hidden" name="password" value="${password}">
 			<p>Page : ${page}</p>
-			<p>Count : ${count}</p>
+			<p>Count in page : ${count}</p>
+			<p>Total : ${totalCount}</p>
 			<c:choose>
 			    <c:when test="${page==1&&totalCount<=20}">
 					<input type="hidden" name="page" value="${page}">

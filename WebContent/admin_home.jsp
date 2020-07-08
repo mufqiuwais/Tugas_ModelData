@@ -32,7 +32,9 @@
 		   				<h2>${dataItem.getTitle()}</h2>
 			    		<p>Author : ${dataItem.getAuthor()}</p>
 					    <p>Date : ${dataItem.getDate()}</p>
-				        <input type="submit" name="action" value="Details">
+				        <input type="submit" name="action" value="Admin Details">
+						<input type="hidden" name="username" value="${username}">
+						<input type="hidden" name="password" value="${password}">
 			    		<input type="hidden" name="id" value="${dataItem.getId()}">
 				    </form>
 			    	</c:forEach>
@@ -43,7 +45,9 @@
 		   				<h2>${dataItem.getTitle()}</h2>
 			    		<p>Author : ${dataItem.getAuthor()}</p>
 					    <p>Date : ${dataItem.getDate()}</p>
-				        <input type="submit" name="action" value="Details">
+				        <input type="submit" name="action" value="Admin Details">
+						<input type="hidden" name="username" value="${username}">
+						<input type="hidden" name="password" value="${password}">
 			    		<input type="hidden" name="id" value="${dataItem.getId()}">
 				    </form>
 			    	</c:forEach>

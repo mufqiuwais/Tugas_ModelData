@@ -16,6 +16,7 @@
 		update content :  <BR>
 		<textarea rows="9" cols="70" name="content">${article.getContent()}</textarea> <BR>
 		<input type="hidden" name="id" value="${article.getId()}">
+		<input type="hidden" name="date" value="${article.getDate()}">
 		<input type="hidden" name="visitors" value="${article.getVisitors()}">
 		<input type="hidden" name="action" value="update">
 		<input type="submit" />

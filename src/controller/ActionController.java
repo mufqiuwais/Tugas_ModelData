@@ -38,7 +38,7 @@ public class ActionController extends HttpServlet {
 		System.out.println("ACTION = "+action);
 		MongoDBUtils mongodbUtils = new MongoDBUtils();
 		ArrayList<Article> listArticle;
-		if("Main Menu".equals(action)||"Guest User".equals(action)){
+		if("Main Menu".equals(action)||"Guest User".equals(action)||"User Home".equals(action)){
 			try {
 				listArticle = mongodbUtils.getTopArticles();
 				ArrayList<Article> latestArticle = mongodbUtils.getLatestArticles();
@@ -58,6 +58,23 @@ public class ActionController extends HttpServlet {
 					article.getUrl(), article.getContent(), article.getVisitors()+1);
 			if(true) {
 				request.getRequestDispatcher("/user_detail.jsp").forward(request, response);
+			}else {
+				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
+				rd.forward(request, response);
+			}	
+		}if("Admin Details".equals(action)){
+			String id = request.getParameter("id");
+			Article article = mongodbUtils.getOneArticleById(id);
+			request.setAttribute("article", article);
+			boolean resultUpdate = mongodbUtils.updateData(id, article.getTitle(), 
+					article.getPublication(), article.getAuthor(), article.getDate(),
+					article.getUrl(), article.getContent(), article.getVisitors());
+			if(true) {
+				String username = request.getParameter("username");
+				String password = request.getParameter("password");
+				request.setAttribute("username", username);
+				request.setAttribute("password", password);
+				request.getRequestDispatcher("/admin_detail.jsp").forward(request, response);
 			}else {
 				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
 				rd.forward(request, response);
@@ -230,6 +247,10 @@ public class ActionController extends HttpServlet {
 			boolean result = mongodbUtils.insertData(id, title,
 					publication, author, date, url, content, 0);
 			if(result) {
+				listArticle = mongodbUtils.getTopArticles();
+				ArrayList<Article> latestArticle = mongodbUtils.getLatestArticles();
+				request.setAttribute("topArticles", listArticle);
+				request.setAttribute("latestArticles", latestArticle);
 				request.getRequestDispatcher("/admin_home.jsp").forward(request, response);
 			}else {
 				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
@@ -250,22 +271,12 @@ public class ActionController extends HttpServlet {
 			}
 		}else if("to_update".equals(action)) {
 			String id = request.getParameter("id");
-			String title = request.getParameter("title");
-			String publication = request.getParameter("publication");
-			String author = request.getParameter("author");
-			String sdate = request.getParameter("date");
-			Date date = new Date();
-			try {
-				date = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(sdate);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			String url = request.getParameter("url");
-			String content = request.getParameter("content");
-			long visitors = Integer.parseInt(request.getParameter("visitors"));
-			Article article = new Article(id, title, publication, author,
-					date, url, content, visitors);
+			Article article = mongodbUtils.getOneArticleById(id);
+			article.setTitle(request.getParameter("title"));
+			article.setPublication(request.getParameter("publication"));
+			article.setAuthor(request.getParameter("author"));
+			article.setUrl(request.getParameter("url"));
+			article.setContent(request.getParameter("content"));
 			request.setAttribute("article", article);	
 			request.getRequestDispatcher("/update_article.jsp").forward(request, response);
 		}else if("update".equals(action)) {

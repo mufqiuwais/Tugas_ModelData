@@ -7,8 +7,11 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<h1>Admin Mode</h1>
 	<form action="ActionController" method="post">
-			<input type="submit" name="action" value="User Home">
+			<input type="hidden" name="username" value="${username}">
+			<input type="hidden" name="password" value="${password}">
+			<input type="submit" name="action" value="Admin Home">
     </form>
 	<h2>${article.getTitle()}</h2>
 	<p>Id : ${article.getId()}</p>
