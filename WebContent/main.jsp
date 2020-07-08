@@ -9,25 +9,12 @@
 </head>
 <body>
 	<div align="center">
-		<caption><h1>Article Database</h1></caption>
+		<caption><h1>Welcome to Article Database</h1></caption>
+		<h2>Continue as :</h2>
 		<form action="ActionController" method="post">
-			<input type="submit" name="action" value="List of All Articles">
-			<input type="submit" name="action" value="Login Admin">
-			
+			<input type="submit" name="action" value="Guest User">
+			<input type="submit" name="action" value="Admin">
         </form>
-    </div>
-    <div align="left">
-    	<caption><h1>Top Articles</h1></caption>
-    	<form action="ActionController" method="post">
-			<input type="submit" name="action" value="Top Articles">
-        </form>
-	    	<c:forEach items="${dataList}" var="dataItem">
-	    	<form action="ActionController" method="post">
-	    		<h2>${dataItem.getTitle()}</h2>
-		        <input type="submit" name="action" value="Details">
-	    		<input type="hidden" name="id" value="${dataItem.getId()}">
-		    </form>
-	    	</c:forEach>
     </div>
 </body>
 </html>

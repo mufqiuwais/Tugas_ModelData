@@ -34,12 +34,15 @@ public class ActionController extends HttpServlet {
 		String action = request.getParameter("action");
 		System.out.println("ACTION = "+action);
 		MongoDBUtils mongodbUtils = new MongoDBUtils();
-		if("Top Articles".equals(action)||"Main Menu".equals(action)){
+		ArrayList<Article> listArticle;
+		if("Main Menu".equals(action)||"Guest User".equals(action)){
 			try {
-				ArrayList<Article> listArticle = mongodbUtils.getTopArticles();
-				request.setAttribute("dataList", listArticle);
+				listArticle = mongodbUtils.getTopArticles();
+				ArrayList<Article> latestArticle = mongodbUtils.getLatestArticles();
+				request.setAttribute("topArticles", listArticle);
+				request.setAttribute("latestArticles", latestArticle);
 //				request.setAttribute("content", "as");
-				request.getRequestDispatcher("/main.jsp").forward(request, response);
+				request.getRequestDispatcher("/user_home.jsp").forward(request, response);
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -58,15 +61,15 @@ public class ActionController extends HttpServlet {
 			}	
 		}if("List of All Articles".equals(action)){
 			try {
-				ArrayList<Article> listArticle = mongodbUtils.getArticles();
+				listArticle = mongodbUtils.getArticles();
 				request.setAttribute("dataList", listArticle);
 				request.getRequestDispatcher("/user_read.jsp").forward(request, response);
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
-		}if("Admin Search Article".equals(action)){
+		}if("Admin's List of All Articles".equals(action)){
 			try {
-				ArrayList<Article> listArticle = mongodbUtils.getArticles();
+				listArticle = mongodbUtils.getArticles();
 				request.setAttribute("dataList", listArticle);
 				request.getRequestDispatcher("/admin_read.jsp").forward(request, response);
 			}catch (Exception e) {
@@ -75,13 +78,13 @@ public class ActionController extends HttpServlet {
 		}if("Search".equals(action)){
 			try {
 				String keySearch = request.getParameter("keySearch");
-				ArrayList<Article> listArticle = mongodbUtils.getArticlesByKeySearch(keySearch);
+				listArticle = mongodbUtils.getArticlesByKeySearch(keySearch);
 				request.setAttribute("dataList", listArticle);
 				request.getRequestDispatcher("/admin_read.jsp").forward(request, response);
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
-		}if("Login Admin".equals(action)){
+		}if("Admin".equals(action)||"Login Admin".equals(action)){
 			RequestDispatcher rd = request.getRequestDispatcher("/admin_login.jsp");
 			rd.forward(request, response);
 		}if("Authentication".equals(action)){
@@ -89,23 +92,26 @@ public class ActionController extends HttpServlet {
 			String password = request.getParameter("password");
 			boolean result = mongodbUtils.authenticate(username, password);
 			if(result) {
+				listArticle = mongodbUtils.getTopArticles();
+				ArrayList<Article> latestArticle = mongodbUtils.getLatestArticles();
+				request.setAttribute("topArticles", listArticle);
+				request.setAttribute("latestArticles", latestArticle);
 				request.setAttribute("username", username);
-				request.getRequestDispatcher("/admin_main.jsp").forward(request, response);
+				request.getRequestDispatcher("/admin_home.jsp").forward(request, response);
 			}else {
 				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
 				rd.forward(request, response);
 			}
 		}else if("Insert".equals(action)){
-			String id = request.getParameter("id");
+			String id = mongodbUtils.generateNewId();
 			String title = request.getParameter("title");
 			String publication = request.getParameter("publication");
 			String author = request.getParameter("author");
-			String sdate = request.getParameter("date");
+			SimpleDateFormat simpleDate = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 			Date date = new Date();
 			try {
-				date = new SimpleDateFormat("MM/dd/yyyy").parse(sdate);
+				date = simpleDate.parse(simpleDate.format(date));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			String url = request.getParameter("url");
@@ -113,7 +119,7 @@ public class ActionController extends HttpServlet {
 			boolean result = mongodbUtils.insertData(id, title,
 					publication, author, date, url, content, 0);
 			if(result) {
-				request.getRequestDispatcher("/admin_main.jsp").forward(request, response);
+				request.getRequestDispatcher("/admin_home.jsp").forward(request, response);
 			}else {
 				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
 				rd.forward(request, response);

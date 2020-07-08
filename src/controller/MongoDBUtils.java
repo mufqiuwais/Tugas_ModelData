@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -42,7 +43,7 @@ public class MongoDBUtils {
 	MongoDatabase database;
 	MongoCollection<Article> collection;
 	MongoCollection<Admin> adminCollection;
-	final static int TOP_ARTICLES_LIMIT = 5;
+	final static int TOP_ARTICLES_LIMIT = 10;
 	
 	public MongoDBUtils() {
 		// Creating Credentials 
@@ -108,14 +109,43 @@ public class MongoDBUtils {
 	
 	public ArrayList<Article> getTopArticles() throws IOException {
 		ArrayList<Article> resultList = new ArrayList<>();
-		FindIterable<Article> articleIterable = collection.find()
-				.sort(new Document("visitors",-1))
-				.limit(TOP_ARTICLES_LIMIT);
+		ArrayList<Document> listCommand = new ArrayList<>();
+		listCommand.add(new Document("$sort",new Document("date",-1)));
+		listCommand.add(new Document("$limit",TOP_ARTICLES_LIMIT));
+		listCommand.add(new Document("$sort",new Document("visitors",-1)));
+		AggregateIterable<Article> articleIterable = collection.aggregate(listCommand);
 		for (Article article : articleIterable) {
 			System.out.println(article);
 			resultList.add(article);
 		}		
 		return resultList;
+	}
+	
+	public ArrayList<Article> getLatestArticles() throws IOException {
+		ArrayList<Article> resultList = new ArrayList<>();
+		ArrayList<Document> listCommand = new ArrayList<>();
+		listCommand.add(new Document("$sort",new Document("date",-1)));
+		listCommand.add(new Document("$limit",TOP_ARTICLES_LIMIT));
+		AggregateIterable<Article> articleIterable = collection.aggregate(listCommand);
+		for (Article article : articleIterable) {
+			System.out.println(article);
+			resultList.add(article);
+		}		
+		return resultList;
+	}
+	
+	public String generateNewId() throws IOException {
+		int newId=0;
+		String newStringId;
+		FindIterable<Article> lastArticle = collection.find()
+				.sort(new Document("_id",-1))
+				.limit(1);
+		for (Article article : lastArticle) {
+			newId = Integer.parseInt(article.getId());
+			newId++;
+		}	
+		newStringId = Integer.toString(newId);
+		return newStringId;
 	}
 	
 	public boolean insertData(String id, String title, String publication,

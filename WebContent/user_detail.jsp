@@ -15,6 +15,7 @@
     <p>Publication : ${article.getPublication()}</p>
     <p>Date : ${article.getDate()}</p>
   	<p>Url : ${article.getUrl()}</p>
+  	<p>Content : </p>
 	<p>${article.getContent()}</p>
 </body>
 </html>
