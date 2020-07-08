@@ -12,9 +12,9 @@
 		update title : <input type="text" name="title" value="${article.getTitle()}"> <BR>
 		update publication : <input type="text" name="publication" value="${article.getPublication()}"> <BR>
 		update author : <input type="text" name="author" value="${article.getAuthor()}"> <BR>
-		update date (mm/dd/yyyy) : <input type="text" name="date" value="${article.getDate()}"> <BR>
 		update url : <input type="text" name="url" value="${article.getUrl()}"> <BR>
-		update content : <input type="text" name="content" value="${article.getContent()}"> <BR>
+		update content :  <BR>
+		<textarea rows="9" cols="70" name="content">${article.getContent()}</textarea> <BR>
 		<input type="hidden" name="id" value="${article.getId()}">
 		<input type="hidden" name="visitors" value="${article.getVisitors()}">
 		<input type="hidden" name="action" value="update">

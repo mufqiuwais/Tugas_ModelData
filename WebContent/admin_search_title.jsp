@@ -46,13 +46,6 @@
 			            <td><input type="submit" name="action" value="delete"></td>
 			        </tr>
 			        <input type="hidden" name="id" value="${dataItem.getId()}">
-			        <input type="hidden" name="title" value="${dataItem.getTitle()}">
-			        <input type="hidden" name="publication" value="${dataItem.getPublication()}">
-			        <input type="hidden" name="author" value="${dataItem.getAuthor()}">
-			        <input type="hidden" name="date" value="${dataItem.getDate()}">
-			        <input type="hidden" name="url" value="${dataItem.getUrl()}">
-			        <input type="hidden" name="content" value="${dataItem.getContent()}">
-			        <input type="hidden" name="visitors" value="${dataItem.getVisitors()}">
 			     </form>
 		    </c:forEach>
 		</table>
@@ -65,25 +58,29 @@
 			    <c:when test="${page==1&&totalCount<=20}">
 					<input type="hidden" name="page" value="${page}">
 					<input type="hidden" name="count" value="${count}">
+					<input type="hidden" name="keySearch" value="${keySearch}">
 			        <br />
 			    </c:when>    
 			    <c:when test="${page==1 && totalCount>20}">
 					<input type="hidden" name="page" value="${page}">
 					<input type="hidden" name="count" value="${count}">
-					<input type="submit" name="action" value="Next">
+					<input type="hidden" name="keySearch" value="${keySearch}">
+					<input type="submit" name="action" value="Next_ST">
 			        <br />
 			    </c:when> 
 			    <c:when test="${page>1 && count<20}">
 					<input type="hidden" name="page" value="${page}">
 					<input type="hidden" name="count" value="${count}">
-					<input type="submit" name="action" value="Back">
+					<input type="hidden" name="keySearch" value="${keySearch}">
+					<input type="submit" name="action" value="Back_ST">
 			        <br />
 			    </c:when>
 			    <c:otherwise>
 			        <input type="hidden" name="page" value="${page}">
 					<input type="hidden" name="count" value="${count}">
-					<input type="submit" name="action" value="Back">
-					<input type="submit" name="action" value="Next">
+					<input type="hidden" name="keySearch" value="${keySearch}">
+					<input type="submit" name="action" value="Back_ST">
+					<input type="submit" name="action" value="Next_ST">
 			        <br />
 			    </c:otherwise>
 			</c:choose>

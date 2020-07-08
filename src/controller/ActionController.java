@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -67,27 +68,78 @@ public class ActionController extends HttpServlet {
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
-		}if("Admin's List of All Articles".equals(action)){
+		}if("Admin's List of All Articles".equals(action)
+				||"Back".equals(action)
+				||"Next".equals(action)){
+			int page=0;
+			long totalCount = mongodbUtils.getTotalCountArticles();
+			int count;
+			if("Admin's List of All Articles".equals(action)) {
+				page = 1;
+			}
+			if("Back".equals(action)){
+				page = Integer.parseInt(request.getParameter("page"));
+				page--;
+			}
+			if("Next".equals(action)){
+				page = Integer.parseInt(request.getParameter("page"));
+				page++;
+			}
+			ArrayList<Article> pageArticle = new ArrayList<>();
+			pageArticle = mongodbUtils.getArticlesByPage(page);
+			count = pageArticle.size();
 			try {
-				listArticle = mongodbUtils.getArticles();
-				request.setAttribute("dataList", listArticle);
+				String username = request.getParameter("username");
+				String password = request.getParameter("password");
+				request.setAttribute("totalCount", totalCount);
+				request.setAttribute("count", count);
+				request.setAttribute("page", page);
+				request.setAttribute("username", username);
+				request.setAttribute("password", password);
+				request.setAttribute("dataList", pageArticle);
 				request.getRequestDispatcher("/admin_read.jsp").forward(request, response);
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
-		}if("Search".equals(action)){
+		}if("Search".equals(action)||"Back_ST".equals(action)||"Next_ST".equals(action)){
+			int page=0;
+			long totalCount;
+			int count;
+			if("Search".equals(action)) {
+				page = 1;
+			}
+			if("Back_ST".equals(action)){
+				page = Integer.parseInt(request.getParameter("page"));
+				page--;
+			}
+			if("Next_ST".equals(action)){
+				page = Integer.parseInt(request.getParameter("page"));
+				page++;
+			}
+			String keySearch = request.getParameter("keySearch");
+			totalCount = mongodbUtils.getTotalArticlesByKeySearch(keySearch);
+			ArrayList<Article> pageArticle = new ArrayList<>();
+			pageArticle = mongodbUtils.getArticlesByKeySearch(keySearch,page);
+			count = pageArticle.size();
 			try {
-				String keySearch = request.getParameter("keySearch");
-				listArticle = mongodbUtils.getArticlesByKeySearch(keySearch);
-				request.setAttribute("dataList", listArticle);
-				request.getRequestDispatcher("/admin_read.jsp").forward(request, response);
+				String username = request.getParameter("username");
+				String password = request.getParameter("password");
+				request.setAttribute("keySearch", keySearch);
+				request.setAttribute("totalCount", totalCount);
+				request.setAttribute("count", count);
+				request.setAttribute("page", page);
+				request.setAttribute("username", username);
+				request.setAttribute("password", password);
+				request.setAttribute("dataList", pageArticle);
+				request.getRequestDispatcher("/admin_search_title.jsp")
+					.forward(request, response);
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
 		}if("Admin".equals(action)||"Login Admin".equals(action)){
 			RequestDispatcher rd = request.getRequestDispatcher("/admin_login.jsp");
 			rd.forward(request, response);
-		}if("Authentication".equals(action)){
+		}if("Authentication".equals(action)||"Admin Home".equals(action)){
 			String username = request.getParameter("username");
 			String password = request.getParameter("password");
 			boolean result = mongodbUtils.authenticate(username, password);
@@ -97,6 +149,7 @@ public class ActionController extends HttpServlet {
 				request.setAttribute("topArticles", listArticle);
 				request.setAttribute("latestArticles", latestArticle);
 				request.setAttribute("username", username);
+				request.setAttribute("password", password);
 				request.getRequestDispatcher("/admin_home.jsp").forward(request, response);
 			}else {
 				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");

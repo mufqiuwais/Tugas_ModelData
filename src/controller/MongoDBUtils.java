@@ -76,14 +76,34 @@ public class MongoDBUtils {
 		}
 		return false;
 	}
+	
+	public long getTotalCountArticles() {
+		return collection.count();
+	}
 
 	public ArrayList<Article> getArticles() throws IOException {
 		ArrayList<Article> resultList = new ArrayList<>();
 		FindIterable<Article> articleIterable = collection.find();
 		for (Article article : articleIterable) {
-			System.out.println(article);
+//			System.out.println(article);
 			resultList.add(article);
 		}		
+		return resultList;
+	}
+	
+	public ArrayList<Article> getArticlesByPage(int page) throws IOException {
+		
+		ArrayList<Article> resultList = new ArrayList<>();
+		int first = 20*(page-1);
+//		long last = first+20-1;
+//		if(last>getTotalCountArticles()) {
+//			last = getTotalCountArticles();
+//		}
+		FindIterable<Article> articleIterable = collection.find().skip(first).limit(20);
+		for (Article article : articleIterable) {
+//			System.out.println(article);
+			resultList.add(article);
+		}	
 		return resultList;
 	}
 	
@@ -97,11 +117,25 @@ public class MongoDBUtils {
 		return result;
 	}
 	
-	public ArrayList<Article> getArticlesByKeySearch(String keySearch) throws IOException {
-		ArrayList<Article> resultList = new ArrayList<>();
-		FindIterable<Article> articleIterable = collection.find(eq("$text",eq("$search",keySearch)));
+	public long getTotalArticlesByKeySearch(String keySearch) throws IOException {
+//		int first = 20*(page-1);
+		long count=0;
+		FindIterable<Article> articleIterable = collection
+				.find(eq("$text",eq("$search",keySearch)));
 		for (Article article : articleIterable) {
-			System.out.println(article);
+//			System.out.println(article);
+			count++;
+		}		
+		return count;
+	}
+	
+	public ArrayList<Article> getArticlesByKeySearch(String keySearch, int page) throws IOException {
+		int first = 20*(page-1);
+		ArrayList<Article> resultList = new ArrayList<>();
+		FindIterable<Article> articleIterable = collection
+				.find(eq("$text",eq("$search",keySearch))).skip(first).limit(20);
+		for (Article article : articleIterable) {
+//			System.out.println(article);
 			resultList.add(article);
 		}		
 		return resultList;

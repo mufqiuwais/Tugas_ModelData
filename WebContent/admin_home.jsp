@@ -13,6 +13,8 @@
 		<caption><h2>Article Database</h2></caption>
 		<caption><p>Welcome ${username}</p></caption>
 		<form action="ActionController" method="post">
+			<input type="hidden" name="username" value="${username}">
+			<input type="hidden" name="password" value="${password}">
 			<input type="submit" name="action" value="Admin's List of All Articles">
 			<input type="submit" name="action" value="Add Article">
         </form>
