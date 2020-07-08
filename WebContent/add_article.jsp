@@ -14,6 +14,8 @@
 		Enter author : <input type="text" name="author"> <BR>
 		Enter url : <input type="text" name="url"> <BR>
 		<textarea rows="9" cols="70" name="content">Enter text here...</textarea> <BR>
+		<input type="hidden" name="username" value="${username}">
+		<input type="hidden" name="password" value="${password}">
 		<input type="hidden" name="action" value="Insert">
 		<input type="submit" />
 	</form>

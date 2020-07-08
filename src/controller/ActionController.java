@@ -27,21 +27,28 @@ import model.Article;
 
 public class ActionController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	MongoDBUtils mongodbUtils;
+	String action;
+	ArrayList<Article> listArticle;
+	ArrayList<Article> latestArticle;
+	ArrayList<Article> pageArticle;
+	SimpleDateFormat simpleDate;
+	Date date;
+	
 	public ActionController() {
 		super();
+		mongodbUtils = new MongoDBUtils();
+		pageArticle = new ArrayList<>();
 	}
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		String action = request.getParameter("action");
+		action = request.getParameter("action");
 		System.out.println("ACTION = "+action);
-		MongoDBUtils mongodbUtils = new MongoDBUtils();
-		ArrayList<Article> listArticle;
 		if("Main Menu".equals(action)||"Guest User".equals(action)||"User Home".equals(action)){
 			try {
 				listArticle = mongodbUtils.getTopArticles();
-				ArrayList<Article> latestArticle = mongodbUtils.getLatestArticles();
+				latestArticle = mongodbUtils.getLatestArticles();
 				request.setAttribute("topArticles", listArticle);
 				request.setAttribute("latestArticles", latestArticle);
 //				request.setAttribute("content", "as");
@@ -95,7 +102,6 @@ public class ActionController extends HttpServlet {
 				page = Integer.parseInt(request.getParameter("page"));
 				page++;
 			}
-			ArrayList<Article> pageArticle = new ArrayList<>();
 			pageArticle = mongodbUtils.getArticlesByPage(page);
 			count = pageArticle.size();
 			try {
@@ -128,7 +134,6 @@ public class ActionController extends HttpServlet {
 				page = Integer.parseInt(request.getParameter("page"));
 				page++;
 			}
-			ArrayList<Article> pageArticle = new ArrayList<>();
 			pageArticle = mongodbUtils.getArticlesByPage(page);
 			count = pageArticle.size();
 			try {
@@ -161,7 +166,6 @@ public class ActionController extends HttpServlet {
 			}
 			String keySearch = request.getParameter("keySearch");
 			totalCount = mongodbUtils.getTotalArticlesByKeySearch(keySearch);
-			ArrayList<Article> pageArticle = new ArrayList<>();
 			pageArticle = mongodbUtils.getArticlesByKeySearch(keySearch,page);
 			count = pageArticle.size();
 			try {
@@ -197,7 +201,6 @@ public class ActionController extends HttpServlet {
 			}
 			String keySearch = request.getParameter("keySearch");
 			totalCount = mongodbUtils.getTotalArticlesByKeySearch(keySearch);
-			ArrayList<Article> pageArticle = new ArrayList<>();
 			pageArticle = mongodbUtils.getArticlesByKeySearch(keySearch,page);
 			count = pageArticle.size();
 			try {
@@ -220,7 +223,7 @@ public class ActionController extends HttpServlet {
 			boolean result = mongodbUtils.authenticate(username, password);
 			if(result) {
 				listArticle = mongodbUtils.getTopArticles();
-				ArrayList<Article> latestArticle = mongodbUtils.getLatestArticles();
+				latestArticle = mongodbUtils.getLatestArticles();
 				request.setAttribute("topArticles", listArticle);
 				request.setAttribute("latestArticles", latestArticle);
 				request.setAttribute("username", username);
@@ -235,8 +238,8 @@ public class ActionController extends HttpServlet {
 			String title = request.getParameter("title");
 			String publication = request.getParameter("publication");
 			String author = request.getParameter("author");
-			SimpleDateFormat simpleDate = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-			Date date = new Date();
+			simpleDate = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+			date = new Date();
 			try {
 				date = simpleDate.parse(simpleDate.format(date));
 			} catch (ParseException e) {
@@ -247,8 +250,12 @@ public class ActionController extends HttpServlet {
 			boolean result = mongodbUtils.insertData(id, title,
 					publication, author, date, url, content, 0);
 			if(result) {
+				String username = request.getParameter("username");
+				String password = request.getParameter("password");
+				request.setAttribute("username", username);
+				request.setAttribute("password", password);
 				listArticle = mongodbUtils.getTopArticles();
-				ArrayList<Article> latestArticle = mongodbUtils.getLatestArticles();
+				latestArticle = mongodbUtils.getLatestArticles();
 				request.setAttribute("topArticles", listArticle);
 				request.setAttribute("latestArticles", latestArticle);
 				request.getRequestDispatcher("/admin_home.jsp").forward(request, response);
@@ -257,6 +264,10 @@ public class ActionController extends HttpServlet {
 				rd.forward(request, response);
 			}			
 		} else if("Add Article".equals(action)){
+			String username = request.getParameter("username");
+			String password = request.getParameter("password");
+			request.setAttribute("username", username);
+			request.setAttribute("password", password);
 			RequestDispatcher rd = request.getRequestDispatcher("/add_article.jsp");
 			rd.forward(request, response);
 		}else if("delete".equals(action)){
@@ -285,7 +296,7 @@ public class ActionController extends HttpServlet {
 			String publication = request.getParameter("publication");
 			String author = request.getParameter("author");
 			String sdate = request.getParameter("date");
-			Date date = new Date();
+			date = new Date();
 			try {
 				date = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(sdate);
 			} catch (ParseException e) {
