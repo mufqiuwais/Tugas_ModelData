@@ -46,13 +46,6 @@
 			            <td><input type="submit" name="action" value="delete"></td>
 			        </tr>
 			        <input type="hidden" name="id" value="${dataItem.getId()}">
-			        <input type="hidden" name="title" value="${dataItem.getTitle()}">
-			        <input type="hidden" name="publication" value="${dataItem.getPublication()}">
-			        <input type="hidden" name="author" value="${dataItem.getAuthor()}">
-			        <input type="hidden" name="date" value="${dataItem.getDate()}">
-			        <input type="hidden" name="url" value="${dataItem.getUrl()}">
-			        <input type="hidden" name="content" value="${dataItem.getContent()}">
-			        <input type="hidden" name="visitors" value="${dataItem.getVisitors()}">
 			     </form>
 		    </c:forEach>
 		</table>

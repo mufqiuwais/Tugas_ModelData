@@ -11,7 +11,9 @@
 	<div align="center">
 		<caption><h2>Article Database</h2></caption>
 		<form action="ActionController" method="post">
-			<input type="submit" name="action" value="Search Article">
+			<input type="text" name="keySearch">
+			<input type="hidden" name="action" value="User Search">
+			<input type="submit" value="Search">
         </form>
         <table border="1" cellpadding="5">
             <caption><h2>List of Articles</h2></caption>
@@ -44,6 +46,37 @@
 			        <input type="hidden" name="content" value="${dataItem.getContent()}">
 			     </form>
 		    </c:forEach>
+		</table>
+		<form action="ActionController" method="post">
+			<p>Page : ${page}</p>
+			<p>Count : ${count}</p>
+			<c:choose>
+			    <c:when test="${page==1&&totalCount<=20}">
+					<input type="hidden" name="page" value="${page}">
+					<input type="hidden" name="count" value="${count}">
+			        <br />
+			    </c:when>    
+			    <c:when test="${page==1 && totalCount>20}">
+					<input type="hidden" name="page" value="${page}">
+					<input type="hidden" name="count" value="${count}">
+					<input type="submit" name="action" value="U_Next">
+			        <br />
+			    </c:when> 
+			    <c:when test="${page>1 && count<20}">
+					<input type="hidden" name="page" value="${page}">
+					<input type="hidden" name="count" value="${count}">
+					<input type="submit" name="action" value="U_Back">
+			        <br />
+			    </c:when>
+			    <c:otherwise>
+			        <input type="hidden" name="page" value="${page}">
+					<input type="hidden" name="count" value="${count}">
+					<input type="submit" name="action" value="U_Back">
+					<input type="submit" name="action" value="U_Next">
+			        <br />
+			    </c:otherwise>
+			</c:choose>
+        </form>
     </div>
 </body>
 </html>

@@ -2,6 +2,7 @@ package controller;
 
 
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +22,7 @@ import org.bson.types.ObjectId;
 
 import com.mongodb.BasicDBObject;
 
+import csv.*;
 import model.Article;
 
 public class ActionController extends HttpServlet {
@@ -60,10 +62,34 @@ public class ActionController extends HttpServlet {
 				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
 				rd.forward(request, response);
 			}	
-		}if("List of All Articles".equals(action)){
+		}if("List of All Articles".equals(action)||"U_Back".equals(action)
+				||"U_Next".equals(action)){
+			int page=0;
+			long totalCount = mongodbUtils.getTotalCountArticles();
+			int count;
+			if("List of All Articles".equals(action)) {
+				page = 1;
+			}
+			if("U_Back".equals(action)){
+				page = Integer.parseInt(request.getParameter("page"));
+				page--;
+			}
+			if("U_Next".equals(action)){
+				page = Integer.parseInt(request.getParameter("page"));
+				page++;
+			}
+			ArrayList<Article> pageArticle = new ArrayList<>();
+			pageArticle = mongodbUtils.getArticlesByPage(page);
+			count = pageArticle.size();
 			try {
-				listArticle = mongodbUtils.getArticles();
-				request.setAttribute("dataList", listArticle);
+				String username = request.getParameter("username");
+				String password = request.getParameter("password");
+				request.setAttribute("totalCount", totalCount);
+				request.setAttribute("count", count);
+				request.setAttribute("page", page);
+				request.setAttribute("username", username);
+				request.setAttribute("password", password);
+				request.setAttribute("dataList", pageArticle);
 				request.getRequestDispatcher("/user_read.jsp").forward(request, response);
 			}catch (Exception e) {
 				e.printStackTrace();
@@ -132,6 +158,38 @@ public class ActionController extends HttpServlet {
 				request.setAttribute("password", password);
 				request.setAttribute("dataList", pageArticle);
 				request.getRequestDispatcher("/admin_search_title.jsp")
+					.forward(request, response);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}if("User Search".equals(action)||"U_Back_ST".equals(action)
+				||"U_Next_ST".equals(action)){
+			int page=0;
+			long totalCount;
+			int count;
+			if("User Search".equals(action)) {
+				page = 1;
+			}
+			if("U_Back_ST".equals(action)){
+				page = Integer.parseInt(request.getParameter("page"));
+				page--;
+			}
+			if("U_Next_ST".equals(action)){
+				page = Integer.parseInt(request.getParameter("page"));
+				page++;
+			}
+			String keySearch = request.getParameter("keySearch");
+			totalCount = mongodbUtils.getTotalArticlesByKeySearch(keySearch);
+			ArrayList<Article> pageArticle = new ArrayList<>();
+			pageArticle = mongodbUtils.getArticlesByKeySearch(keySearch,page);
+			count = pageArticle.size();
+			try {
+				request.setAttribute("keySearch", keySearch);
+				request.setAttribute("totalCount", totalCount);
+				request.setAttribute("count", count);
+				request.setAttribute("page", page);
+				request.setAttribute("dataList", pageArticle);
+				request.getRequestDispatcher("/user_search_title.jsp")
 					.forward(request, response);
 			}catch (Exception e) {
 				e.printStackTrace();

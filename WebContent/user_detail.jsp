@@ -11,6 +11,7 @@
 			<input type="submit" name="action" value="Main Menu">
     </form>
 	<h2>${article.getTitle()}</h2>
+	<p>Id : ${article.getId()}</p>
     <p>Author : ${article.getAuthor()}</p>
     <p>Publication : ${article.getPublication()}</p>
     <p>Date : ${article.getDate()}</p>
